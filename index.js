@@ -10,6 +10,12 @@ const greet = require('./greetings');
 
 const greetings = greet();
 
+const pg = require("pg");
+
+const Pool = pg.Pool;
+
+
+
 app.engine('handlebars', exphbs({
     layoutsDir: './views/layouts'
 }));
@@ -21,12 +27,29 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:3023/greeted';
+
+
+let useSSL = false;
+let local = process.env.LOCAL || false;
+if (process.env.DATABASE_URL && !local) {
+    useSSL = true;
+}
+
+const pool = new Pool({
+    connectionString,
+    ssl: useSSL
+});
+
+
+
 app.get('/', function (req, res) {
-    
+
 
     res.render('index', {
         "counter": greetings.nameCounter(),
     });
+
 });
 
 app.post('/greetings', function (req, res) {
@@ -41,7 +64,7 @@ app.post('/greetings', function (req, res) {
     res.render('greetings', {
         "counter": greetings.nameCounter(),
         "message": greetings.greetMe(name, language),
-        "error": (error === '') ? greetings.greetMe(req.body.name, req.body.language): error,
+        "error": (error === '') ? greetings.greetMe(req.body.name, req.body.language) : error,
 
     })
 
