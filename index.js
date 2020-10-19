@@ -52,7 +52,7 @@ if (process.env.DATABASE_URL && !local) {
 
 const pool = new Pool({
     connectionString,
-    ssl: useSSL
+  //  ssl: useSSL
 });
 
 
