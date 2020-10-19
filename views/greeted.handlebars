@@ -1,25 +1,18 @@
 <div class="container">
 
-    <h1>Greeted</h1>
+    <h1>Names greeted</h1>
 
     <hr>
 
 <h6>
     <ul>
         {{#each user}}
-        <li><a href="/amount/{{this}}">{{this}}</a></li>
+        <li><a href="/amount/{{this.name}}">{{this.name}}</a></li>
 
         {{/each}}
     </ul>
 
 </h6>
-    <br>
-    <br>
-    <br>
 
-
-    <div>
-        <a href="/"> <button class="button-primary" name="button">Back</button> </a>
-    </div>
 
 </div>

@@ -5,8 +5,8 @@
     </div>
     <div>
         <hr>
-        <form action="/greetings" method="POST">
-            <input type="text" name="user_name" placeholder="please enter your name" class="greetText">
+        <form action="/" method="POST">
+            <input type="text" name="name" placeholder="please enter your name" class="greetText">
 
             <div class="radio">
 
@@ -26,6 +26,9 @@
         </form>
 
 
+        <div class="names" class="nameInput">
+            {{message}}
+        </div>
 
         <div class="myGreetCounter">
             {{counter}}

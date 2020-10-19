@@ -2,18 +2,30 @@ const express = require('express');
 
 const exphbs = require('express-handlebars');
 
+const flash = require('express-flash');
+
+const session = require('express-session');
+
 const app = express();
 
 const bodyParser = require('body-parser');
 
 const greet = require('./greetings');
 
-const greetings = greet();
 
 const pg = require("pg");
 
 const Pool = pg.Pool;
 
+
+app.use(session({
+    secret : "Align messages",
+    resave: false,
+    saveUninitialized: true
+  }));
+
+  // initialise the flash middleware
+  app.use(flash());
 
 
 app.engine('handlebars', exphbs({
@@ -27,7 +39,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:3023/greeted';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/greeted';
 
 
 let useSSL = false;
@@ -42,53 +54,66 @@ const pool = new Pool({
 });
 
 
+const greetings = greet(pool);
+
+
+
 
 app.get('/', function (req, res) {
 
 
     res.render('index', {
-        "counter": greetings.nameCounter(),
+        // "counter": greetings.nameCounter(),
     });
 
 });
 
-app.post('/greetings', function (req, res) {
+app.post('/', async (req, res) => {
 
-    var name = req.body.user_name;
-    var language = req.body.greetingRadio;
-    var error = greetings.flashMessage(req.body.name, req.body.language)
+    // var name = req.body.user_name;
+    // var language = req.body.greetingRadio;
 
+    const { name, language } = req.body;
+    const message = await greetings.greetWork(name, language);
+    //console.log(language)
+    // await greetings.greetWork(name);
+    const counter = await greetings.getCounter();
 
-    greetings.setNames(name);
+    //const reset = await greetings.reset();
 
-    res.render('greetings', {
-        "counter": greetings.nameCounter(),
-        "message": greetings.greetMe(name, language),
-        "error": (error === '') ? greetings.greetMe(req.body.name, req.body.language) : error,
+    // greetings.setNames(name);
+    // greetings.insertName
+    res.render('index', {
+        counter,
+        message,
+       // reset
+        // "counter": await greetings.nameCounter(),
+        // "message": await greetings.greetMe(name, language),
 
-    })
+    });
 
 });
 
-app.get('/greeted', function (req, res) {
+app.get('/greeted', async (req, res) => {
+
+
+    const user = await greetings.userCounter()
 
     res.render('greeted', {
-        "user": greetings.getNamesAsList()
+        user
     })
 });
 
-app.get('/amount/:user_name', function (req, res) {
-    var name = req.params.user_name;
-    // console.log(name);
-    // var name = greet(req.body.user_name);
-    var count = greetings.nameCounter();
-    var language = req.body.greetingRadio;
+app.get('/amount/:user_name', async (req, res) => {
+    const name = req.params.user_name;
+    const count = await greetings.incrementExistingUser(name);
+
+    //    console.log(count);
 
 
 
     res.render('amount', {
-        name,
-        "count": greetings.oneCounter(name)
+        name, count
 
     })
 });

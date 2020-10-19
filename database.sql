@@ -4,9 +4,7 @@ create table greeted(
     counter int not null
 );
 
-
-
-insert into greeted (name, counter) values (Zola, 1)
+-- INSERT into greeted (name, counter) values ('Lilitha', 1)
 
 
 
