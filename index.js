@@ -12,6 +12,8 @@ const bodyParser = require('body-parser');
 
 const greet = require('./greetings');
 
+const routeFunction = require('./routes');
+
 
 const pg = require("pg");
 
@@ -55,70 +57,15 @@ const pool = new Pool({
 
 
 const greetings = greet(pool);
+const routeInstance = routeFunction(greetings)
 
+app.get('/', routeInstance.greet)
 
+app.post('/', routeInstance.namesGreeted)
 
+app.get('/greeted', routeInstance.greetedCounter)
 
-app.get('/', function (req, res) {
-
-
-    res.render('index', {
-        // "counter": greetings.nameCounter(),
-    });
-
-});
-
-app.post('/', async (req, res) => {
-
-    // var name = req.body.user_name;
-    // var language = req.body.greetingRadio;
-
-    const { name, language } = req.body;
-    const message = await greetings.greetWork(name, language);
-    //console.log(language)
-    // await greetings.greetWork(name);
-    const counter = await greetings.getCounter();
-
-    //const reset = await greetings.reset();
-
-    // greetings.setNames(name);
-    // greetings.insertName
-    res.render('index', {
-        counter,
-        message,
-       // reset
-        // "counter": await greetings.nameCounter(),
-        // "message": await greetings.greetMe(name, language),
-
-    });
-
-});
-
-app.get('/greeted', async (req, res) => {
-
-
-    const user = await greetings.userCounter()
-
-    res.render('greeted', {
-        user
-    })
-});
-
-app.get('/amount/:user_name', async (req, res) => {
-    const name = req.params.user_name;
-    const count = await greetings.incrementExistingUser(name);
-
-    //    console.log(count);
-
-
-
-    res.render('amount', {
-        name, count
-
-    })
-});
-
-
+app.get('/amount/:user_name', routeInstance.eachUserCounter)
 
 const PORT = process.env.PORT || 3023;
 
