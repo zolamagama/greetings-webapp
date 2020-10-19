@@ -65,6 +65,8 @@ app.post('/', routeInstance.namesGreeted)
 
 app.get('/greeted', routeInstance.greetedCounter)
 
+app.get('/reset', routeInstance.deleteFromDt)
+
 app.get('/amount/:user_name', routeInstance.eachUserCounter)
 
 const PORT = process.env.PORT || 3023;

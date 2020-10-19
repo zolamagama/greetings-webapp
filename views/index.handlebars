@@ -1,7 +1,11 @@
 <div class="container">
     <div>
         <h1>Greet</h1>
-        <div class="message"></div>
+        {{#if messages}}
+        <div class="textbox">
+            <h6>{{messages.error}}</h6>
+            {{/if}}
+        </div>
     </div>
     <div>
         <hr>
@@ -10,19 +14,19 @@
 
             <div class="radio">
 
-                <input type="radio" name="greetingRadio" class="greetingRadio" value="IsiXhosa">
+                <input type="radio" name="language" class="greetingRadio" value="IsiXhosa">
                 <span class="checkmark">IsiXhosa</span>
 
-                <input type="radio" name="greetingRadio" class="greetingRadio" value="English">
+                <input type="radio" name="language" class="greetingRadio" value="English">
                 <span class="checkmark">English</span>
 
-                <input type="radio" name="greetingRadio" class="greetingRadio" value="Afrikaans">
+                <input type="radio" name="language" class="greetingRadio" value="Afrikaans">
                 <span class="checkmark">Afrikaans</span>
 
             </div>
             <button class="button-primary" type="submit" name="button">Greet Me</button>
             <br>
-            <button class="button-primary" type="reset" name="button">Reset</button>
+           <a href="/reset"> <button class="button-primary" type="button" name="button">Reset</button></a>
         </form>
 
 
