@@ -1,16 +1,18 @@
 module.exports = function greet(pool) {
-
+    
 
     async function setNames(name) {
-        const capitalize = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+       // const capitalize = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
 
-        let inspect = await pool.query('select name from greeted where name = $1;', [capitalize]);
+        let inspect = await pool.query('select name from greeted where name = $1;', [name]);
         return inspect.rows;
 
 
     }
 
     async function incrementExistingUser(name) {
+        // const capitalize = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+
 
         const sql = 'select * from greeted where name = $1;';
 
@@ -60,9 +62,9 @@ module.exports = function greet(pool) {
     }
 
     async function insertName(name) {
-        const capitalize = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+       // const capitalize = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
 
-        var results = await pool.query('insert into greeted (name, counter) values ($1,$2);', [capitalize, 1])
+        var results = await pool.query('insert into greeted (name, counter) values ($1,$2);', [name, 1])
 
         return results
     }

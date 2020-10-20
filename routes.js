@@ -1,5 +1,5 @@
 module.exports = function greetRoutes(greetings) {
-
+    const _ = require('lodash');
 
     async function greet(req, res) {
         const counter = await greetings.getCounter()
@@ -12,7 +12,7 @@ module.exports = function greetRoutes(greetings) {
 
     async function namesGreeted(req, res) {
 
-        const name = req.body.name;
+        const name = _.capitalize(req.body.name);
         const language = req.body.language;
 
         if (!name) {
@@ -59,7 +59,7 @@ module.exports = function greetRoutes(greetings) {
     };
 
     async function eachUserCounter(req, res) {
-        const name = req.params.user_name;
+        const name = req.params.user_name
         const count = await greetings.incrementExistingUser(name);
 
 
